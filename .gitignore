@@ -1,0 +1,14 @@
+bin/novoalign.lic
+hla_gen.format.filter.extend.DRB.no26789.fasta.*
+hla_gen.format.filter.extend.DRB.no26789.v2.fasta.*
+bin_380/
+example/exon/output/
+example/whole/output/
+example/hic/output/
+example/tenx/output/
+example/nanopore/output/
+example/pacbio/output/
+spechla_env/
+bin/SpecHap/build/
+*ndx
+*config.txt
