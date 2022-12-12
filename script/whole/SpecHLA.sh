@@ -172,7 +172,7 @@ license=$dir/../../bin/novoalign.lic
 #   database_prefix=hla_gen.format.filter.extend.DRB.no26789.v2
 database_prefix=merged
 
-fi
+# fi
 if [ -f "$license" ];then
     echo "Detect novoalign license, use novoalign."
     if [ ! -f "$db/ref/$database_prefix.ndx" ];then
