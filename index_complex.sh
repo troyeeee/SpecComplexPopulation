@@ -2,7 +2,7 @@
 
 # construct config file for ScanIndel
 # HLAs=(A B C DPA1 DPB1 DQA1 DQB1 DRB1)
-HLAs=( $(awk '{print $4}' /run/media/wangxuedong/backup/software/population-phase/scripts/freebayes_alts_10_1000_forbedtools.region.csv) ) 
+HLAs=( $(awk '{print $4}' $dir/db_complex/freebayes_alts_10_1000_forbedtools.region.csv) ) 
 
 dir=$(cd `dirname $0`; pwd)
 

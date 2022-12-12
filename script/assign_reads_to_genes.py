@@ -197,7 +197,7 @@ def main():
     #     assign_fastq(options.fq1, gene, 1, assign_dict)
     #     assign_fastq(options.fq2, gene, 2, assign_dict)
     region_names = []
-    with open("/run/media/wangxuedong/backup/software/population-phase/scripts/freebayes_alts_10_1000_forbedtools.region.csv") as region_f:
+    with open("../db_comlex/freebayes_alts_10_1000_forbedtools.region.csv") as region_f:
         for line in region_f:
             items = line.strip().split("\t")
             name = items[3]

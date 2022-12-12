@@ -5,7 +5,7 @@ dir=$3
 
 pdir=$(cd `dirname $0`; pwd)
 bin=$pdir/../../bin
-db=$pdir/../../db
+db=$pdir/../../db_complex
 
 outdir=$dir/Scanindel
 mkdir -p $outdir
@@ -14,7 +14,7 @@ export PATH=$PATH:$bin
 
 rm -rf $outdir/$sample.breakpoint.txt $outdir/$sample.ins.fa
 # HLAs=(A B C DPA1 DPB1 DQA1 DQB1 DRB1)
-HLAs=( $(awk '{print $4}' /run/media/wangxuedong/backup/software/population-phase/scripts/freebayes_alts_10_1000_forbedtools.region.csv) ) 
+HLAs=( $(awk '{print $4}' $db/freebayes_alts_10_1000_forbedtools.region.csv) ) 
 perl $pdir/merge_breakpoint.pl $dir/$sample.realign.filter.vcf $outdir/$sample.breakpoint.txt $outdir/$sample.ins.fa          
 for hla in ${HLAs[@]}; do
         hfqfile=$outdir/scanindel.fq.HLA_$hla.list

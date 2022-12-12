@@ -15,7 +15,7 @@ import argparse
 # gene_list = ['A']
 
 gene_list = []
-with open("/run/media/wangxuedong/backup/software/population-phase/scripts/freebayes_alts_10_1000_forbedtools.region.csv") as gene_file:
+with open("../db_complex/freebayes_alts_10_1000_forbedtools.region.csv") as gene_file:
     for idx, line in enumerate(gene_file):
         if idx ==0:
             continue

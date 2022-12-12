@@ -202,7 +202,7 @@ $bin/bwa mem -U 10000 -L 10000,10000 -R $group $complex $fq1 $fq2 | $bin/samtool
 #hlas=(A B C)
 # TODO:: change gene names
 # hlas=(A B C DPA1 DPB1 DQA1 DQB1 DRB1)
-complexes=( $(awk '{print $4}' /run/media/wangxuedong/backup/software/population-phase/scripts/freebayes_alts_10_1000_forbedtools.region.csv) ) 
+complexes=( $(awk '{print $4}' $db/freebayes_alts_10_1000_forbedtools.region.csv) ) 
 # for hla in ${hlas[@]}; do
 bam_list_file=$outdir/bam_list.txt
 for complex in ${complexes[@]}; do
@@ -235,7 +235,7 @@ rm $bam_list_file
 # else # full length
 # TODO::give a bed file
 # assemble_region=$dir/select.region.txt
-assemble_region="/run/media/wangxuedong/backup/software/population-phase/scripts/selected_complex_region.txt"
+assemble_region="$db/selected_complex_region.txt"
 
 # fi
 # TODO:: change hla_fa in assembly
