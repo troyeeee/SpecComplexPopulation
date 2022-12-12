@@ -197,7 +197,7 @@ def main():
     #     assign_fastq(options.fq1, gene, 1, assign_dict)
     #     assign_fastq(options.fq2, gene, 2, assign_dict)
     region_names = []
-    with open("../db_comlex/freebayes_alts_10_1000_forbedtools.region.csv") as region_f:
+    with open(options.region_file) as region_f:
         for line in region_f:
             items = line.strip().split("\t")
             name = items[3]
@@ -220,6 +220,7 @@ if __name__ == "__main__":
     parser.add_argument('-nm', '--max_nm', help='MAX NM', required=False, default = 2, type=int)
     parser.add_argument('-d', '--diff_score', help='The score for the best gene must be at least this higher\
          than the second gene', required=True, default = 0.1, type=float)
+    parser.add_argument('-r', '--region_file', help='region file', required=True) 
     options = parser.parse_args()
 
     main()

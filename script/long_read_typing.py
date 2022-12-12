@@ -15,13 +15,20 @@ import argparse
 # gene_list = ['A']
 
 gene_list = []
-with open("../db_complex/freebayes_alts_10_1000_forbedtools.region.csv") as gene_file:
+with open(f"{sys.path[0]}/../db_complex/ref/merged.fa") as gene_file:
     for idx, line in enumerate(gene_file):
         if idx ==0:
             continue
         items = line.strip().split('\t')
         name = items[3]
         gene_list.append(name)
+# with open("../db_complex/freebayes_alts_10_1000_forbedtools.region.csv") as gene_file:
+#     for idx, line in enumerate(gene_file):
+#         if idx ==0:
+#             continue
+#         items = line.strip().split('\t')
+#         name = items[3]
+#         gene_list.append(name)
 
 
 class Read_Obj():
@@ -284,6 +291,7 @@ if __name__ == "__main__":
     optional.add_argument("-m", type=int, help="1 represents typing, 0 means only read assignment", metavar="\b", default=1)
     optional.add_argument("-a", type=str, help="prefix of filtered fastq file.", metavar="\b", default="long_read")
     optional.add_argument("-g", type=int, help="Whether use G-translate in annotation [1|0], default is 0.", metavar="\b", default=1)
+    required.add_argument("-f", type=str, help="region file", metavar="\b")
     # optional.add_argument("-u", type=str, help="Choose full-length or exon typing. 0 indicates full-length, 1 means exon.", metavar="\b", default="0")
     optional.add_argument("-h", "--help", action="help")
     args = vars(parser.parse_args()) 
@@ -296,6 +304,8 @@ if __name__ == "__main__":
     # Min_score = 0.1  #the read is too long, so the score can be very low.
     Min_score = 0  #the read is too long, so the score can be very low.
     Min_diff = args["d"]  #0.001
+
+    
 
     ###assign reads
     if args["m"] == 10086:

@@ -190,7 +190,7 @@ fi
 $bin/samtools index $outdir/$sample.map_database.bam
 # TODO:: change gene name in assign_reads_to_genes.py
 $python_bin $dir/../assign_reads_to_genes.py -1 $fq1 -2 $fq2 -n $bin -o $outdir -d ${mini_score:-0.1} \
--b ${outdir}/${sample}.map_database.bam -nm ${nm:-2}
+-b ${outdir}/${sample}.map_database.bam -nm ${nm:-2} -r "$db/freebayes_alts_10_1000_forbedtools.region.csv"
 # #############################################################################################################
 
 
