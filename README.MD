@@ -3,15 +3,15 @@
 ## Install  
 First, create the env with conda, and activate the env.
 ```
-git clone https://github.com/deepomicslab/SpecHLA.git --depth 1
-cd SpecHLA/
+git clone https://github.com/troyeeee/SpecComplexPopulation.git --depth 1
+cd SpecComplexPopulation/
 conda env create --prefix=./spechla_env -f environment.yml
 conda activate ./spechla_env
 ```
 Second, index the database and install the packages.
 ```
 unset LD_LIBRARY_PATH && unset LIBRARY_PATH 
-bash index.sh
+bash index_complex.sh
 ```
 Note: 1) SpecHLA requires a License of [Novoalign](https://www.novocraft.com/buy-now/) in `bin/`, if not detected, it uses `bowtie2` as replacement automatically. 
 The License file of `Novoalign` should be put in the `bin/` folder `before` running `bash index.sh`. 2) SpecHLA now supports Linux and Windows WSL.
