@@ -239,7 +239,10 @@ assemble_region="$db/selected_complex_region.txt"
 
 # fi
 # TODO:: change hla_fa in assembly
-sh $dir/../run.assembly.realign.sh $sample $outdir/$sample.merge.bam $outdir 70 $assemble_region ${num_threads:-5}
+# sh $dir/../run.assembly.realign.sh $sample $outdir/$sample.merge.bam $outdir 70 $assemble_region ${num_threads:-5}
+# rlen set to 200 for different reads length
+sh $dir/../run.assembly.realign.sh $sample $outdir/$sample.merge.bam $outdir 200 $assemble_region ${num_threads:-5}
+
 # $bin/freebayes -a -f $hlaref -p 3 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
 $bin/freebayes -a -f $complexref -p 3 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
 

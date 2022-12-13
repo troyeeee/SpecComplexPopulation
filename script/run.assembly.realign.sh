@@ -37,7 +37,7 @@ then
 	echo "$pos noreads"
 else
 $sdir/fermikit/fermi.kit/fermi2.pl unitig -s1k -t $thread  -T 10 -2 -l $rlen -p $outdir/prefix2 $outdir/extract.fa > $outdir/prefix2.mak
-
+which make
 make -f $outdir/prefix2.mak
 
 if [ ! -f "$outdir/prefix2.mag.gz" ]
