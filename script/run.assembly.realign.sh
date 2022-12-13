@@ -7,7 +7,7 @@ bedfile=$5
 thread=$6
 dir=$(cd `dirname $0`; pwd)
 sdir=$dir/../bin
-db=$dir/../db
+db=$dir/../db_complex
 # hla_fa=$db/ref/hla.ref.extend.fa
 complex_fa=$db/ref/merged.fa
 
