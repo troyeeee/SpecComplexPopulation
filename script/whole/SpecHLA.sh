@@ -197,7 +197,7 @@ $python_bin $dir/../assign_reads_to_genes.py -1 $fq1 -2 $fq2 -n $bin -o $outdir 
 
 # ########### align the gene-specific reads to the corresponding gene reference################################
 # $bin/bwa mem -U 10000 -L 10000,10000 -R $group $hlaref $fq1 $fq2 | $bin/samtools view -H  >$outdir/header.sam
-$bin/bwa mem -U 10000 -L 10000,10000 -R $group $complex $fq1 $fq2 | $bin/samtools view -H  >$outdir/header.sam
+$bin/bwa mem -U 10000 -L 10000,10000 -R $group $complexref $fq1 $fq2 | $bin/samtools view -H  >$outdir/header.sam
 
 #hlas=(A B C)
 # TODO:: change gene names
