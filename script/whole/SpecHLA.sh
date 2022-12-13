@@ -120,7 +120,7 @@ python_bin=$dir/../../spechla_env/bin/python3
 bin=$dir/../../bin
 db=$dir/../../db_complex
 # hlaref=$db/ref/hla.ref.extend.fa
-complex=$db/ref/merged.fa
+complexref=$db/ref/merged.fa
 
 
 if [ ${given_outdir:-NA} == NA ]
@@ -244,7 +244,7 @@ assemble_region="$db/selected_complex_region.txt"
 sh $dir/../run.assembly.realign.sh $sample $outdir/$sample.merge.bam $outdir 200 $assemble_region ${num_threads:-5}
 
 # $bin/freebayes -a -f $hlaref -p 3 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
-$bin/freebayes -a -f $complex_ref -p 3 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
+$bin/freebayes -a -f $complexref -p 3 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
 
 rm -rf $outdir/$sample.realign.vcf.gz 
 bgzip -f $outdir/$sample.realign.vcf
