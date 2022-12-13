@@ -22,13 +22,16 @@ do
 
 # hla=`echo $pos|cut -d ":" -f 1`
 # ref=$db/HLA/$hla/$hla
-
+echo "processing $pos ..."
 complex=`echo $pos|cut -d ":" -f 1`
+echo "complex =  $complex"
+echo "bam = $bam"
 ref=$db/complex/$complex/$complex
 
 $sdir/samtools view --threads $thread -f 64 $bam $pos| cut -f 1,6,10|sort|uniq |awk '{OFS="\n"}{print ">"$1"##1 "$2,$3}' > $outdir/extract.fa
 $sdir/samtools view --threads $thread -f 128 $bam $pos| cut -f 1,6,10|sort|uniq |awk '{OFS="\n"}{print ">"$1"##2 "$2,$3}' >> $outdir/extract.fa
 
+echo "exrtact fa for $pos done"
 if [ ! -f "$outdir/extract.fa" ]
 then
 	echo "$pos noreads"

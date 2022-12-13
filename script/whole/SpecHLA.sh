@@ -215,7 +215,7 @@ for complex in ${complexes[@]}; do
         $bin/bwa mem -t ${num_threads:-5} -U 10000 -L 10000,10000 -R $group $complex_ref $outdir/$complex.R1.fq.gz $outdir/$complex.R2.fq.gz\
          | $bin/samtools view -bS -F 0x800 -| $bin/samtools sort - >$outdir/$complex.bam
         $bin/samtools index $outdir/$complex.bam
-        echo $outdir/$complex.bam > $bam_list_file
+        echo $outdir/$complex.bam >> $bam_list_file
 done
 # TODO:: change merge file names
 # $bin/samtools merge -f -h $outdir/header.sam $outdir/$sample.merge.bam $outdir/A.bam $outdir/B.bam $outdir/C.bam\
@@ -229,7 +229,7 @@ rm $bam_list_file
 
 
 # ################################### local assembly and realignment #################################
-# echo start realignment...
+echo start realignment...
 # if [ $focus_exon_flag == 1 ];then #exon
 #   assemble_region=$dir/select.region.exon.txt
 # else # full length
@@ -260,6 +260,7 @@ echo BAM and VCF are ready.
 
 
 # ################### assign long reads to gene ###################
+echo "assign long reads to gene"
 if [ ${tgs:-NA} != NA ];then
     $python_bin $dir/../long_read_typing.py -r ${tgs} -n $sample -m 0 -o $outdir -j ${num_threads:-5} -a pacbio
 fi
@@ -271,6 +272,7 @@ fi
 bam=$outdir/$sample.realign.sort.bam
 vcf=$outdir/$sample.realign.filter.vcf
 # ###################### mask low-depth region #############################################
+echo "mask low depth"
 $bin/samtools depth -aa $bam>$bam.depth  
 if [ $focus_exon_flag == 1 ];then my_mask_exon=True; else my_mask_exon=${mask_exon:-False}; fi
 $python_bin $dir/../mask_low_depth_region.py -c $bam.depth -o $outdir -w 20 -d ${mask_depth:-5} -f $my_mask_exon
@@ -278,56 +280,58 @@ $python_bin $dir/../mask_low_depth_region.py -c $bam.depth -o $outdir -w 20 -d $
 
 
 # ###################### call long indel #############################################
-if [ ${long_indel:-False} == True ] && [ $focus_exon_flag != 1 ]; #don't call long indel for exon typing
-    then
-    port=$(date +%N|cut -c5-9)
-    bfile=$outdir/$sample.long.InDel.breakpoint.txt
+echo "call long indel"
+# if [ ${long_indel:-False} == True ] && [ $focus_exon_flag != 1 ]; #don't call long indel for exon typing
+#     then
+#     port=$(date +%N|cut -c5-9)
+#     bfile=$outdir/$sample.long.InDel.breakpoint.txt
 
-    if [ ${tgs:-NA} != NA ] # detect long Indel with pacbio
-        then
-        # $bin/pbmm2 align -j ${num_threads:-5} $hlaref ${tgs:-NA} $outdir/$sample.movie1.bam --sort --sample $sample --rg '@RG\tID:movie1'
-        $bin/pbmm2 align -j ${num_threads:-5} $complexref ${tgs:-NA} $outdir/$sample.movie1.bam --sort --sample $sample --rg '@RG\tID:movie1'
+#     if [ ${tgs:-NA} != NA ] # detect long Indel with pacbio
+#         then
+#         # $bin/pbmm2 align -j ${num_threads:-5} $hlaref ${tgs:-NA} $outdir/$sample.movie1.bam --sort --sample $sample --rg '@RG\tID:movie1'
+#         $bin/pbmm2 align -j ${num_threads:-5} $complexref ${tgs:-NA} $outdir/$sample.movie1.bam --sort --sample $sample --rg '@RG\tID:movie1'
         
-        $bin/samtools view -H $outdir/$sample.movie1.bam >$outdir/header.sam
+#         $bin/samtools view -H $outdir/$sample.movie1.bam >$outdir/header.sam
 
-        # hlas=(A B C DPA1 DPB1 DQA1 DQB1 DRB1)
-        # for hla in ${hlas[@]}; do
-        #         # hla_ref=$db/HLA/HLA_$hla/HLA_$hla.fa
-        #         complex_ref=$db/HLA/HLA_$hla/HLA_$hla.fa
-        #         $bin/pbmm2 align -j ${num_threads:-5} $complex_ref $outdir/$sample/$hla.pacbio.fq.gz $outdir/$hla.gene.bam --sort --sample $sample --rg '@RG\tID:movie1'
-        #         $bin/samtools index $outdir/$hla.gene.bam
-        # done
-        # hlas=(A B C DPA1 DPB1 DQA1 DQB1 DRB1)
-        bam_list_file=$outdir/bam_list.txt
-        for complex in ${complexes[@]}; do
-                # hla_ref=$db/HLA/HLA_$hla/HLA_$hla.fa
-                complex_ref=$db/complex/$complex/$complex.fa
-                $bin/pbmm2 align -j ${num_threads:-5} $complex_ref $outdir/$sample/$complex.pacbio.fq.gz $outdir/$complex.complex.bam --sort --sample $sample --rg '@RG\tID:movie1'
-                $bin/samtools index $outdir/$complex.complex.bam
-                echo $outdir/$complex.complex.bam > $bam_list_file
-        done
-        # TODO:: change merge way
-        # $bin/samtools merge -f -h $outdir/header.sam $outdir/$sample.pacbio.bam $outdir/A.gene.bam $outdir/B.gene.bam $outdir/C.gene.bam\
-        # $outdir/DPA1.gene.bam $outdir/DPB1.gene.bam $outdir/DQA1.gene.bam $outdir/DQB1.gene.bam $outdir/DRB1.gene.bam
-        # $bin/samtools index $outdir/$sample.pacbio.bam
-        $bin/samtools merge -f -h $outdir/header.sam $outdir/$sample.pacbio.bam -b $bam_list_file
-        $bin/samtools index $outdir/$sample.pacbio.bam
-        rm $bam_list_file
+#         # hlas=(A B C DPA1 DPB1 DQA1 DQB1 DRB1)
+#         # for hla in ${hlas[@]}; do
+#         #         # hla_ref=$db/HLA/HLA_$hla/HLA_$hla.fa
+#         #         complex_ref=$db/HLA/HLA_$hla/HLA_$hla.fa
+#         #         $bin/pbmm2 align -j ${num_threads:-5} $complex_ref $outdir/$sample/$hla.pacbio.fq.gz $outdir/$hla.gene.bam --sort --sample $sample --rg '@RG\tID:movie1'
+#         #         $bin/samtools index $outdir/$hla.gene.bam
+#         # done
+#         # hlas=(A B C DPA1 DPB1 DQA1 DQB1 DRB1)
+#         bam_list_file=$outdir/bam_list.txt
+#         for complex in ${complexes[@]}; do
+#                 # hla_ref=$db/HLA/HLA_$hla/HLA_$hla.fa
+#                 complex_ref=$db/complex/$complex/$complex.fa
+#                 $bin/pbmm2 align -j ${num_threads:-5} $complex_ref $outdir/$sample/$complex.pacbio.fq.gz $outdir/$complex.complex.bam --sort --sample $sample --rg '@RG\tID:movie1'
+#                 $bin/samtools index $outdir/$complex.complex.bam
+#                 echo $outdir/$complex.complex.bam > $bam_list_file
+#         done
+#         # TODO:: change merge way
+#         # $bin/samtools merge -f -h $outdir/header.sam $outdir/$sample.pacbio.bam $outdir/A.gene.bam $outdir/B.gene.bam $outdir/C.gene.bam\
+#         # $outdir/DPA1.gene.bam $outdir/DPB1.gene.bam $outdir/DQA1.gene.bam $outdir/DQB1.gene.bam $outdir/DRB1.gene.bam
+#         # $bin/samtools index $outdir/$sample.pacbio.bam
+#         $bin/samtools merge -f -h $outdir/header.sam $outdir/$sample.pacbio.bam -b $bam_list_file
+#         $bin/samtools index $outdir/$sample.pacbio.bam
+#         rm $bam_list_file
 
 
-        $bin/pbsv discover -l 100 $outdir/$sample.pacbio.bam $outdir/$sample.svsig.gz
-        # $bin/pbsv call -t DEL,INS -m 150 -j ${num_threads:-5} $hlaref $outdir/$sample.svsig.gz $outdir/$sample.var.vcf
-        $bin/pbsv call -t DEL,INS -m 150 -j ${num_threads:-5} $complexref $outdir/$sample.svsig.gz $outdir/$sample.var.vcf
+#         $bin/pbsv discover -l 100 $outdir/$sample.pacbio.bam $outdir/$sample.svsig.gz
+#         # $bin/pbsv call -t DEL,INS -m 150 -j ${num_threads:-5} $hlaref $outdir/$sample.svsig.gz $outdir/$sample.var.vcf
+#         $bin/pbsv call -t DEL,INS -m 150 -j ${num_threads:-5} $complexref $outdir/$sample.svsig.gz $outdir/$sample.var.vcf
 
-        $python_bin $dir/vcf2bp.py $outdir/$sample.var.vcf $outdir/$sample.tgs.breakpoint.txt
-        cat $outdir/$sample.tgs.breakpoint.txt >$bfile
-    else # detect long Indel with pair end data.
-        bash $dir/../ScanIndel/run_scanindel_sample.sh $sample $bam $outdir $port
-        cat $outdir/Scanindel/$sample.breakpoint.txt >$bfile
-    fi
-else
-    bfile=nothing
-fi
+#         $python_bin $dir/vcf2bp.py $outdir/$sample.var.vcf $outdir/$sample.tgs.breakpoint.txt
+#         cat $outdir/$sample.tgs.breakpoint.txt >$bfile
+#     else # detect long Indel with pair end data.
+#         echo "scan long indel using pe data"
+#         bash $dir/../ScanIndel/run_scanindel_sample.sh $sample $bam $outdir $port
+#         cat $outdir/Scanindel/$sample.breakpoint.txt >$bfile
+#     fi
+# else
+#     bfile=nothing
+# fi
 if [ ${sv:-NA} != NA ]
     then
     bfile=$sv
@@ -336,6 +340,7 @@ fi
 
 
 # ########### phase, link blocks, calculate haplotype ratio, give typing results ##############
+echo "start phasing"
 if [ "$maf" == "" ];then
     if [ $focus_exon_flag != 1 ]; then
         my_maf=0.05
@@ -349,40 +354,40 @@ fi
 echo Minimum Minor Allele Frequency is $my_maf.
 # hlas=(A B C DPA1 DPB1 DQA1 DQB1 DRB1)
 # hlas=(A)
-for complex in ${complexes[@]}; do
-# hla_ref=$db/ref/HLA_$hla.fa
-complex_ref=$db/ref/$complex.fa
+# for complex in ${complexes[@]}; do
+# # hla_ref=$db/ref/HLA_$hla.fa
+# complex_ref=$db/ref/$complex.fa
 
-$python_bin $dir/../phase_variants.py \
-  -o $outdir \
-  -b $bam \
-  -s $bfile \
-  -v $vcf \
-#   --fq1 $outdir/$hla.R1.fq.gz \
-#   --fq2 $outdir/$hla.R2.fq.gz \
-  --fq1 $outdir/$complex.R1.fq.gz \
-  --fq2 $outdir/$complex.R2.fq.gz \
-#   --gene HLA_$hla \
-  --gene $complex \
+# $python_bin $dir/../phase_variants.py \
+#   -o $outdir \
+#   -b $bam \
+#   -s $bfile \
+#   -v $vcf \
+# #   --fq1 $outdir/$hla.R1.fq.gz \
+# #   --fq2 $outdir/$hla.R2.fq.gz \
+#   --fq1 $outdir/$complex.R1.fq.gz \
+#   --fq2 $outdir/$complex.R2.fq.gz \
+# #   --gene HLA_$hla \
+#   --gene $complex \
 
-  --freq_bias $my_maf \
-  --snp_qual ${snp_quality:-0.01} \
-  --snp_dp ${snp_dp:-5} \
-#   --ref $hla_ref \
-  --ref $complex_ref \
+#   --freq_bias $my_maf \
+#   --snp_qual ${snp_quality:-0.01} \
+#   --snp_dp ${snp_dp:-5} \
+# #   --ref $hla_ref \
+#   --ref $complex_ref \
 
-  --tgs ${tgs:-NA} \
-  --nanopore ${nanopore_data:-NA} \
-  --hic_fwd ${hic_data_fwd:-NA} \
-  --hic_rev ${hic_data_rev:-NA} \
-  --tenx ${tenx_data:-NA} \
-  --sa $sample \
-  --weight_imb ${weight_imb:-0} \
-  --exon $focus_exon_flag \
-  --thread_num ${num_threads:-5} \
-  --use_database ${use_database:-1} \
-  --trio ${trio:-None}
-done
+#   --tgs ${tgs:-NA} \
+#   --nanopore ${nanopore_data:-NA} \
+#   --hic_fwd ${hic_data_fwd:-NA} \
+#   --hic_rev ${hic_data_rev:-NA} \
+#   --tenx ${tenx_data:-NA} \
+#   --sa $sample \
+#   --weight_imb ${weight_imb:-0} \
+#   --exon $focus_exon_flag \
+#   --thread_num ${num_threads:-5} \
+#   --use_database ${use_database:-1} \
+#   --trio ${trio:-None}
+# done
 # ##################################################################################################
 
 
@@ -398,6 +403,6 @@ done
 
 
 
-bash $dir/../clear_output.sh $outdir/
+# bash $dir/../clear_output.sh $outdir/
 cat $outdir/hla.result.txt
 echo $sample is done.
