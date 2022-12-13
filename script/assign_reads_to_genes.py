@@ -217,7 +217,7 @@ if __name__ == "__main__":
     parser.add_argument('-1', '--fq1', help='bin dir', required=True) 
     parser.add_argument('-2', '--fq2', help='bin dir', required=True)  
     parser.add_argument('-n', '--bin_dir', help='bin dir', required=True)  
-    parser.add_argument('-nm', '--max_nm', help='MAX NM', required=False, default = 2, type=int)
+    parser.add_argument('-nm', '--max_nm', help='MAX NM', required=False, default = 50, type=int)
     parser.add_argument('-d', '--diff_score', help='The score for the best gene must be at least this higher\
          than the second gene', required=True, default = 0.1, type=float)
     parser.add_argument('-r', '--region_file', help='region file', required=True) 
