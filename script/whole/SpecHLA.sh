@@ -272,8 +272,8 @@ fi
 # fi
 
 
-# bam=$outdir/$sample.realign.sort.bam
-# vcf=$outdir/$sample.realign.filter.vcf
+bam=$outdir/$sample.realign.sort.bam
+vcf=$outdir/$sample.realign.filter.vcf
 # # ###################### mask low-depth region #############################################
 # echo "mask low depth"
 # $bin/samtools depth -aa $bam>$bam.depth  
