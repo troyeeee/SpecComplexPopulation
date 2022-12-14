@@ -15,7 +15,7 @@ import argparse
 # gene_list = ['A']
 
 gene_list = []
-with open(f"{sys.path[0]}/../db_complex/freebayes_alts_10_1000_forbedtools.region.csv") as gene_file:
+with open(f"{sys.path[0]}/../db_complex/freebayes_alts_10_ex_1500.region.csv") as gene_file:
     for idx, line in enumerate(gene_file):
         items = line.strip().split('\t')
         name = items[3]

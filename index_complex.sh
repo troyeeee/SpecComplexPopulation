@@ -5,7 +5,7 @@
 # HLAs=( $(awk '{print $4}' $dir/db_complex/freebayes_alts_10_1000_forbedtools.region.csv) ) 
 
 dir=$(cd `dirname $0`; pwd)
-HLAs=( $(awk '{print $4}' $dir/db_complex/freebayes_alts_10_1000_forbedtools.region.csv) ) 
+HLAs=( $(awk '{print $4}' $dir/db_complex/freebayes_alts_10_ex_1500.region.csv) ) 
 
 
 # :<<!
