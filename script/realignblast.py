@@ -47,8 +47,8 @@ def remove_dup_reads(inbam, outbam, readsfile):
     for r in nf:
         if r.is_supplementary:
             continue
-        if r.is_unmapped:
-            continue
+        #if r.is_unmapped:
+        #    continue
         if r.is_read1:
             tag=1
         if r.is_read2:
@@ -59,6 +59,7 @@ def remove_dup_reads(inbam, outbam, readsfile):
             r.reference_start = int(arrs[1]) -1
             r.cigarstring = arrs[2]
             r.reference_name = arrs[0]
+
 
         if r.reference_name != r.next_reference_name:
             continue
@@ -119,5 +120,6 @@ if __name__ == "__main__":
 
 
     outf.write(r)
+
 
 '''
