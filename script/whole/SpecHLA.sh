@@ -361,25 +361,23 @@ complexes=( $(awk '{print $4}' $db/freebayes_alts_10_1000_forbedtools.region.csv
 for complex in ${complexes[@]}; do
 # hla_ref=$db/ref/HLA_$hla.fa
 complex_ref=$db/ref/$complex.fa
+#   --fq1 $outdir/$hla.R1.fq.gz \
+#   --fq2 $outdir/$hla.R2.fq.gz \
+#   --gene HLA_$hla \
+#   --ref $hla_ref \
 
 $python_bin $dir/../phase_complex_variants.py \
   -o $outdir \
   -b $bam \
   -s $bfile \
   -v $vcf \
-#   --fq1 $outdir/$hla.R1.fq.gz \
-#   --fq2 $outdir/$hla.R2.fq.gz \
   --fq1 $outdir/$complex.R1.fq.gz \
   --fq2 $outdir/$complex.R2.fq.gz \
-#   --gene HLA_$hla \
   --gene $complex \
-
   --freq_bias $my_maf \
   --snp_qual ${snp_quality:-0.01} \
   --snp_dp ${snp_dp:-5} \
-#   --ref $hla_ref \
   --ref $complex_ref \
-
   --tgs ${tgs:-NA} \
   --nanopore ${nanopore_data:-NA} \
   --hic_fwd ${hic_data_fwd:-NA} \
