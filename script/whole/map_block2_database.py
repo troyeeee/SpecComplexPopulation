@@ -195,12 +195,23 @@ if __name__ == "__main__":
     gene = sys.argv[1]
     outdir = sys.argv[2] + "/"
 
-    hla_ref = '%s/../../db/ref/hla.ref.extend.fa'%(sys.path[0])
-    gene_db = '%s/../../db/HLA/whole/%s.fasta'%(sys.path[0], gene)
+    # hla_ref = '%s/../../db/ref/hla.ref.extend.fa'%(sys.path[0])
+    # gene_db = '%s/../../db/HLA/whole/%s.fasta'%(sys.path[0], gene)
+    hla_ref = '%s/../../db_complex/ref/merged.fa'%(sys.path[0])
+    gene_db = '%s/../../db_complex/complex/%s/%s.fa'%(sys.path[0], gene, gene)
     vcf = "%s/%s.spechap.vcf.gz"%(outdir, gene)
 
     break_point_file = outdir + "/%s_break_points_spechap.txt"%(gene)
     score_file = outdir + "/%s_break_points_score.txt"%(gene)
+
+    # gene_length_dict = {}
+    # with open('%s/../../db_complex/selected_complex_region.txt'%(gene)) as region_f:
+    #     for line in enumerate(region_f):
+    #         items = line.strip().split(":")
+    #         gene = items[0]
+    #         region_s = items[1]
+    #         start, end = region_s.split("-")
+    #         gene_length_dict[gene] = [start, end]
 
     gene_length_dict = {'HLA_A':[1000,4503],'HLA_B':[1000,5081],'HLA_C':[1000,5304],'HLA_DPA1':[1000,10775],\
         'HLA_DPB1':[1000,12468],'HLA_DQA1':[1000,7492],'HLA_DQB1':[1000,8480],'HLA_DRB1':[1000,12229]}
