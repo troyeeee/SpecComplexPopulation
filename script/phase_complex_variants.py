@@ -20,7 +20,7 @@ def str2bool(v):
 
 Usage = \
 """
-python3 phase_variants.py [options] 
+python3 phase_complex_variants.py [options] 
 
 Help information can be found by python3 phase_variants.py -h/--help, additional information can be found in \
 README.MD or https://github.com/deepomicslab/SpecHLA.

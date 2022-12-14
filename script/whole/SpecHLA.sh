@@ -366,10 +366,34 @@ complex_ref=$db/ref/$complex.fa
 #   --gene HLA_$hla \
 #   --ref $hla_ref \
 
-$python_bin $dir/../phase_complex_variants.py \
+echo """$python_bin $dir/../phase_complex_variants.py \
   -o $outdir \
   -b $bam \
   -s $bfile \
+  -v $vcf \
+  --fq1 $outdir/$complex.R1.fq.gz \
+  --fq2 $outdir/$complex.R2.fq.gz \
+  --gene $complex \
+  --freq_bias $my_maf \
+  --snp_qual ${snp_quality:-0.01} \
+  --snp_dp ${snp_dp:-5} \
+  --ref $complex_ref \
+  --tgs ${tgs:-NA} \
+  --nanopore ${nanopore_data:-NA} \
+  --hic_fwd ${hic_data_fwd:-NA} \
+  --hic_rev ${hic_data_rev:-NA} \
+  --tenx ${tenx_data:-NA} \
+  --sa $sample \
+  --weight_imb ${weight_imb:-0} \
+  --exon $focus_exon_flag \
+  --thread_num ${num_threads:-5} \
+  --use_database ${use_database:-1} \
+  --trio ${trio:-None}"""
+
+$python_bin $dir/../phase_complex_variants.py \
+  -o $outdir \
+  -b $bam \
+  -s NA \
   -v $vcf \
   --fq1 $outdir/$complex.R1.fq.gz \
   --fq2 $outdir/$complex.R2.fq.gz \
