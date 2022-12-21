@@ -9,32 +9,32 @@ HLAs=( $(awk '{print $4}' $dir/db_complex/freebayes_alts_10_ex_1500.region.csv) 
 
 
 # :<<!
-# for hla in ${HLAs[@]}; do
-#     config_file=$dir/db_complex/complex/${hla}.config.txt
-#     echo bwa=$dir/db_complex/complex/${hla}/${hla}.fa >$config_file
-#     echo freebayes=$dir/db_complex/complex/${hla}/${hla}.fa >>$config_file
-#     echo blat=$dir/db_complex/complex/${hla}/ >>$config_file
-#     bwa index $dir/db_complex/complex/${hla}/${hla}.fa
-#     bwa index $dir/db_complex/ref/${hla}.fa
-# done
-# bwa index $dir/db_complex/ref/merged.fa
-# # index the database for bowtie2
-# # bowtie2-build $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.fasta $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.fasta
-# # bowtie2-build $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.v2.fasta $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.v2.fasta
-# bowtie2-build $dir/db_complex/ref/merged.fa $dir/db_complex/ref/merged.fa
+for hla in ${HLAs[@]}; do
+    config_file=$dir/db_complex/complex/${hla}.config.txt
+    echo bwa=$dir/db_complex/complex/${hla}/${hla}.fa >$config_file
+    echo freebayes=$dir/db_complex/complex/${hla}/${hla}.fa >>$config_file
+    echo blat=$dir/db_complex/complex/${hla}/ >>$config_file
+    bwa index $dir/db_complex/complex/${hla}/${hla}.fa
+    bwa index $dir/db_complex/ref/${hla}.fa
+done
+bwa index $dir/db_complex/ref/merged.fa
+# index the database for bowtie2
+# bowtie2-build $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.fasta $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.fasta
+# bowtie2-build $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.v2.fasta $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.v2.fasta
+bowtie2-build $dir/db_complex/ref/merged.fa $dir/db_complex/ref/merged.fa
 
-# # index the database for novoalign
-# license=$dir/bin/novoalign.lic
-# if [ -f "$license" ];then
-#     echo "has licience"
-#     # $dir/bin/novoindex  -k 14 -s 1 $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.ndx \
-#     # $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.fasta
+# index the database for novoalign
+license=$dir/bin/novoalign.lic
+if [ -f "$license" ];then
+    echo "has licience"
+    # $dir/bin/novoindex  -k 14 -s 1 $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.ndx \
+    # $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.fasta
 
-#     # $dir/bin/novoindex  -k 14 -s 1 $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.v2.ndx \
-#     # $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.v2.fasta
-#     $dir/bin/novoindex  -k 14 -s 1 $dir/db_complex/ref/merged.ndx \
-#     $dir/db_complex/ref/merged.fa
-# fi
+    # $dir/bin/novoindex  -k 14 -s 1 $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.v2.ndx \
+    # $dir/db_complex/ref/hla_gen.format.filter.extend.DRB.no26789.v2.fasta
+    $dir/bin/novoindex  -k 14 -s 1 $dir/db_complex/ref/merged.ndx \
+    $dir/db_complex/ref/merged.fa
+fi
 
 # the lib required by samtools
 ln -s $dir/spechla_env/lib/libncurses.so.6 $dir/spechla_env/lib/libncurses.so.5

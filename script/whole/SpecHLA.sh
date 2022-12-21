@@ -180,14 +180,14 @@ if [ -f "$license" ];then
         exit 1
     fi
     $bin/novoalign -d $db/ref/$database_prefix.ndx -f $fq1 $fq2 -F STDFQ -o SAM \
-    -o FullNW -r All 100000 --mCPU ${num_threads:-5} -c 10  -g 20 -x 3  | $bin/samtools view \
-    -Sb - | $bin/samtools sort -  > $outdir/$sample.map_database.bam
+    -o FullNW -r All 100000 --mCPU ${num_threads:-5} -c $num_threads  -g 20 -x 3  | $bin/samtools view \
+    -Sb - | $bin/samtools sort -@ $num_threads -  > $outdir/$sample.map_database.bam
 else
     echo "Can't detect novoalign license, use bowtie2." 
     bowtie2 --very-sensitive -p ${num_threads:-5} -k 30 -x $db/ref/$database_prefix.fa -1 $fq1 -2 $fq2|\
     $bin/samtools view -bS -| $bin/samtools sort - >$outdir/$sample.map_database.bam
 fi
-$bin/samtools index $outdir/$sample.map_database.bam
+$bin/samtools index -@ $num_threads $outdir/$sample.map_database.bam
 # TODO:: change gene name in assign_reads_to_genes.py
 $python_bin $dir/../assign_reads_to_genes.py -1 $fq1 -2 $fq2 -n $bin -o $outdir -d ${mini_score:-0.1} \
 -b ${outdir}/${sample}.map_database.bam -nm ${nm:-15} -r "$db/freebayes_alts_10_ex_1500.region.csv"
@@ -197,7 +197,7 @@ $python_bin $dir/../assign_reads_to_genes.py -1 $fq1 -2 $fq2 -n $bin -o $outdir 
 
 # ########### align the gene-specific reads to the corresponding gene reference################################
 # $bin/bwa mem -U 10000 -L 10000,10000 -R $group $hlaref $fq1 $fq2 | $bin/samtools view -H  >$outdir/header.sam
-$bin/bwa mem -U 10000 -L 10000,10000 -R $group $complexref $fq1 $fq2 | $bin/samtools view -H  >$outdir/header.sam
+$bin/bwa mem -t ${num_threads:-5} -U 10000 -L 10000,10000 -R $group $complexref $fq1 $fq2 | $bin/samtools view -H  >$outdir/header.sam
 
 #hlas=(A B C)
 # TODO:: change gene names
@@ -213,16 +213,16 @@ for complex in ${complexes[@]}; do
         #  | $bin/samtools view -bS -F 0x800 -| $bin/samtools sort - >$outdir/$hla.bam
         # $bin/samtools index $outdir/$hla.bam
         $bin/bwa mem -t ${num_threads:-5} -U 10000 -L 10000,10000 -R $group $complex_ref $outdir/$complex.R1.fq.gz $outdir/$complex.R2.fq.gz\
-         | $bin/samtools view -bS -F 0x800 -| $bin/samtools sort - >$outdir/$complex.bam
-        $bin/samtools index $outdir/$complex.bam
+         | $bin/samtools view -bS -F 0x800 -| $bin/samtools sort -@ $num_threads - >$outdir/$complex.bam
+        $bin/samtools index -@ $num_threads $outdir/$complex.bam
         echo $outdir/$complex.bam >> $bam_list_file
 done
 # TODO:: change merge file names
 # $bin/samtools merge -f -h $outdir/header.sam $outdir/$sample.merge.bam $outdir/A.bam $outdir/B.bam $outdir/C.bam\
 #  $outdir/DPA1.bam $outdir/DPB1.bam $outdir/DQA1.bam $outdir/DQB1.bam $outdir/DRB1.bam
 # $bin/samtools index $outdir/$sample.merge.bam
-$bin/samtools merge -f -h $outdir/header.sam $outdir/$sample.merge.bam -b $bam_list_file
-$bin/samtools index $outdir/$sample.merge.bam
+$bin/samtools merge -f -h -@ $num_threads $outdir/header.sam $outdir/$sample.merge.bam -b $bam_list_file
+$bin/samtools index -@ $num_threads $outdir/$sample.merge.bam
 rm $bam_list_file
 
 # ###############################################################################################################
