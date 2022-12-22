@@ -221,7 +221,7 @@ done
 # $bin/samtools merge -f -h $outdir/header.sam $outdir/$sample.merge.bam $outdir/A.bam $outdir/B.bam $outdir/C.bam\
 #  $outdir/DPA1.bam $outdir/DPB1.bam $outdir/DQA1.bam $outdir/DQB1.bam $outdir/DRB1.bam
 # $bin/samtools index $outdir/$sample.merge.bam
-$bin/samtools merge -f -h -@ $num_threads $outdir/header.sam $outdir/$sample.merge.bam -b $bam_list_file
+$bin/samtools merge -f -h $outdir/header.sam -@ $num_threads $outdir/$sample.merge.bam -b $bam_list_file
 $bin/samtools index -@ $num_threads $outdir/$sample.merge.bam
 rm $bam_list_file
 
