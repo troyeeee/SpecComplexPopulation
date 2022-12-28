@@ -244,7 +244,10 @@ assemble_region="$db/selected_complex_region_ex_500.txt"
 sh $dir/../run.assembly.realign.sh $sample $outdir/$sample.merge.bam $outdir 200 $assemble_region ${num_threads:-5}
 
 # $bin/freebayes -a -f $hlaref -p 3 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
-$bin/freebayes -a -f $complexref -p 3 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
+# $bin/freebayes -a -f $complexref -p 3 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
+
+$bin/freebayes -a -f $complexref -p 2 $outdir/$sample.realign.sort.bam > $outdir/$sample.realign.vcf && \
+
 
 rm -rf $outdir/$sample.realign.vcf.gz 
 bgzip -f $outdir/$sample.realign.vcf
@@ -389,6 +392,29 @@ $python_bin $dir/../phase_complex_variants.py \
   --use_database ${use_database:-1} \
   --trio ${trio:-None}
 done
+
+echo "convert trio allele to bi allele for filter vcf..."
+$python_bin $dir/../triallele_to_bi.py \
+  -o $outdir \
+  -b $bam \
+  -s NA \
+  -v $vcf \
+  --gene 'all' \
+  --freq_bias $my_maf \
+  --snp_qual ${snp_quality:-1} \
+  --snp_dp ${snp_dp:-5} \
+  --ref $complex_ref \
+  --tgs ${tgs:-NA} \
+  --nanopore ${nanopore_data:-NA} \
+  --hic_fwd ${hic_data_fwd:-NA} \
+  --hic_rev ${hic_data_rev:-NA} \
+  --tenx ${tenx_data:-NA} \
+  --sa $sample \
+  --weight_imb ${weight_imb:-0} \
+  --exon $focus_exon_flag \
+  --thread_num ${num_threads:-5} \
+  --use_database ${use_database:-1} \
+  --trio ${trio:-None}
 # ##################################################################################################
 
 
